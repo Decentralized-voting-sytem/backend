@@ -3,8 +3,7 @@ package database
 import (
     "fmt"
     "log"
-    "yourproject/models" // Import your models package
-
+    "github.com/Decentralized-voting-sytem/backend/models/db/models"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
 )
