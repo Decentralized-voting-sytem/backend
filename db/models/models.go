@@ -26,14 +26,11 @@ type Candidate struct {
 
 type Vote struct {
     ID          uint           `gorm:"primaryKey"`
-    VoterID     uint           `gorm:"not null"`       
+    VoterID     string           `gorm:"not null"`       
     CandidateID uint           `gorm:"not null"`     
     CreatedAt   time.Time
     UpdatedAt   time.Time
     DeletedAt   gorm.DeletedAt `gorm:"index"`
-    
-    Voter     Voter     `gorm:"foreignKey:VoterID"`
-    Candidate Candidate `gorm:"foreignKey:CandidateID"`
 }
 
 type Admin struct {
@@ -43,5 +40,4 @@ type Admin struct {
     Password  string         `gorm:"not null"`        
     CreatedAt time.Time
     UpdatedAt time.Time
-    DeletedAt gorm.DeletedAt `gorm:"index"`
 }

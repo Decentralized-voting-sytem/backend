@@ -1,4 +1,4 @@
-module connection/connection.go
+module github.com/Decentralized-voting-sytem/backend/db
 
 go 1.22.4
 
