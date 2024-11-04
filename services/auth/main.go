@@ -1,24 +1,40 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Decentralized-voting-sytem/backend/db/database"
+	"github.com/Decentralized-voting-sytem/backend/db/models"
 	"github.com/Decentralized-voting-sytem/backend/services/auth/controllers"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-var DB *gorm.DB
-
 func main() {
-	r := gin.Default()
-	
-	config := cors.DefaultConfig()
-    config.AllowOrigins = []string{"http://localhost:3000"}
-    config.AllowHeaders = []string{"Content-Type"}
-	config.AllowCredentials = true
+	// Initialize the database connection
 	database.Init()
-    r.Use(cors.New(config))
-	database.InitDB()
+
+	// Create a new Gin router
+	r := gin.Default()
+
+	// Auto migrate the models
+	err := database.DB.AutoMigrate(&models.Vote{}, &models.Voter{}, &models.Candidate{}, &models.Admin{})
+	if err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
+	}
+
+	// Configure CORS
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowHeaders = []string{"Content-Type"}
+	config.AllowCredentials = true
+	r.Use(cors.New(config))
+
+	// Set up routes
 	r.POST("/login", controllers.Login)
-	r.Run()
+
+	// Start the server
+	if err := r.Run(); err != nil {
+		log.Fatalf("Failed to run server: %v", err)
+	}
 }

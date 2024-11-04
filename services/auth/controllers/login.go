@@ -1,41 +1,45 @@
 package controllers
 
 import (
-	"log"
-	"os"
 	"time"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"errors"
 	"github.com/Decentralized-voting-sytem/backend/db/models"
 	"github.com/Decentralized-voting-sytem/backend/db/database"
 )
 
 func Login(c *gin.Context) {
 	var body struct {
-		VoterID   string         `gorm:"unique;not null"` 
-		Name      string         `gorm:"not null"`
-		DOB       time.Time      `gorm:"not null"`       
-		Password  string         `gorm:"not null"` 
+		VoterID  string `json:"voter_id"`
+		// Name     string `json:"name"`
+		DOB      string `json:"dob"`      
+		// Password string `json:"password"`
 	}
 
 	if c.Bind(&body) != nil {
 		c.JSON(402, gin.H{
-			"error": "fail to read the body",
+			"error": "Failed to read the body",
 		})
+		return
+	}
+
+	// Parse DOB string to time.Time
+	dob, err := time.Parse("2006-01-02", body.DOB)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format for DOB. Use YYYY-MM-DD"})
 		return
 	}
 
 	var voter models.Voter
 	var vote models.Vote
 
-	query1 := `SELECT * FROM voters WHERE voter_id = ? AND name = ? AND dob = ? AND password = ?`
-	res := database.DB.Raw(query1, body.VoterID, body.Name, body.DOB, body.Password).Scan(&voter)
+	query1 := `SELECT * FROM voters WHERE dob = ?`
+	res := database.DB.Raw(query1, dob).Scan(&voter)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
 		return
 	}
-	
+
 	if res.RowsAffected == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
