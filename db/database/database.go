@@ -22,3 +22,7 @@ func Init() {
         log.Fatalf("Failed to migrate database: %v", err)
     }
 }
+
+func GetDB() *gorm.DB {
+    return DB
+}
