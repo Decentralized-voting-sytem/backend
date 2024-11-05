@@ -1,9 +1,6 @@
 package main
 
 import (
-    "fmt"
-    "log"
-
     "github.com/Decentralized-voting-sytem/backend/db/database"
     "github.com/Decentralized-voting-sytem/backend/services/auth/controllers"
     "github.com/gin-contrib/cors"

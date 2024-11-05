@@ -3,7 +3,7 @@ module github.com/Decentralized-voting-sytem/backend/services/auth
 go 1.22.4
 
 require (
-	github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241105005321-a9d47a1c2ebb
+	github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241105013245-9fc2c8638234
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	gorm.io/driver/postgres v1.5.9
