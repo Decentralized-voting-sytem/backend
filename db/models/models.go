@@ -7,9 +7,9 @@ import (
 
 type Voter struct {
     ID        uint           `gorm:"primaryKey"`
-    VoterID   string         `gorm:"unique;not null"` 
+    VoterID   string            `gorm:"unique;not null"` 
     Name      string         `gorm:"not null"`
-    DOB       time.Time      `gorm:"not null"`       
+    DOB       time.Time      `gorm:"not null;type:date"`        
     Password  string         `gorm:"not null"`       
     CreatedAt time.Time
     UpdatedAt time.Time

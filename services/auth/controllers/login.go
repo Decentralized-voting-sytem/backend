@@ -11,9 +11,9 @@ import (
 func Login(c *gin.Context) {
 	var body struct {
 		VoterID  string `json:"voter_id"`
-		// Name     string `json:"name"`
+		Name     string `json:"name"`
 		DOB      string `json:"dob"`      
-		// Password string `json:"password"`
+		Password string `json:"password"`
 	}
 
 	if c.Bind(&body) != nil {
@@ -33,8 +33,8 @@ func Login(c *gin.Context) {
 	var voter models.Voter
 	var vote models.Vote
 
-	query1 := `SELECT * FROM voters WHERE dob = ?`
-	res := database.DB.Raw(query1, dob).Scan(&voter)
+	query1 := `SELECT * FROM voters WHERE voter_id = ? name = ? AND dob = ? password = ?`
+	res := database.DB.Raw(query1, body.VoterID, body.Name, dob, body.Password).Scan(&voter)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
 		return
