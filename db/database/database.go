@@ -1,28 +1,27 @@
 package database
 
 import (
+    "sync"
     "log"
     "github.com/Decentralized-voting-sytem/backend/db/models"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var DBLock sync.Mutex
 
-func Init() {
-    var err error
-    dsn := "host=localhost user=postgres password=samyak dbname=voting port=5432 sslmode=disable"
-    DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-    if err != nil {
-        log.Fatalf("Failed to connect to database: %v", err)
-    }
+func Init() *gorm.DB{
+    DBLock.Lock()
+	defer DBLock.Unlock()
 
-    err = DB.AutoMigrate(&models.Vote{}, &models.Voter{}, &models.Candidate{}, &models.Admin{})
-    if err != nil {
-        log.Fatalf("Failed to migrate database: %v", err)
-    }
+	dsn := "host=localhost user=postgres password=samyak dbname=voting port=5432 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("failed to connect database: %v", err)
+	}
+
+	db.AutoMigrate(&models.User{}, &models.Activities{}, &models.ActivityType{}, &models.Drill{},&models.UserActivityMapping{},&models.ActivityAndActivityTypeMapping{},&models.DrillCompletion{},&models.MuscleGroup{},&models.SubMuscleGroup{},&models.Excercise{}, &models.QuestionSet{}, &models.MarkedQuestionSet{}, &models.Thoughts{})
+
+	return db
 }
 
-func GetDB() *gorm.DB {
-    return DB
-}
