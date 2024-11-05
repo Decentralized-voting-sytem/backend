@@ -17,12 +17,6 @@ func main() {
 	// Create a new Gin router
 	r := gin.Default()
 
-	// Auto migrate the models
-	err := database.DB.AutoMigrate(&models.Vote{}, &models.Voter{}, &models.Candidate{}, &models.Admin{})
-	if err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
-	}
-
 	// Configure CORS
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"}

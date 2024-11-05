@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"time"
+	// "time"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"github.com/Decentralized-voting-sytem/backend/db/models"
@@ -23,18 +23,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Parse DOB string to time.Time
-	dob, err := time.Parse("2006-01-02", body.DOB)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format for DOB. Use YYYY-MM-DD"})
-		return
-	}
-
 	var voter models.Voter
 	var vote models.Vote
 
 	query1 := `SELECT * FROM voters WHERE voter_id = ? name = ? AND dob = ? password = ?`
-	res := database.DB.Raw(query1, body.VoterID, body.Name, dob, body.Password).Scan(&voter)
+	res := database.DB.Raw(query1, body.VoterID, body.Name, body.DOB, body.Password).Scan(&voter)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
 		return
