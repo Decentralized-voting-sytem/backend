@@ -2,6 +2,7 @@ package controllers
 
 import (
 	// "time"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"github.com/Decentralized-voting-sytem/backend/db/models"
@@ -12,7 +13,7 @@ func Login(c *gin.Context) {
 	var body struct {
 		VoterID  string `json:"voter_id"`
 		Name     string `json:"name"`
-		DOB      string `json:"dob"`      
+		// DOB      string `json:"dob"`      
 		Password string `json:"password"`
 	}
 
@@ -26,8 +27,7 @@ func Login(c *gin.Context) {
 	var voter models.Voter
 	var vote models.Vote
 
-	query1 := `SELECT * FROM voters WHERE voter_id = ? name = ? AND dob = ? password = ?`
-	res := database.DB.Raw(query1, body.VoterID, body.Name, body.DOB, body.Password).Scan(&voter)
+	res := database.DB.Where("voter_id= ?",body.VoterID).First(&voter)
 	if res.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
 		return
@@ -35,6 +35,7 @@ func Login(c *gin.Context) {
 
 	if res.RowsAffected == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		fmt.Println(body)
 		return
 	}
 
