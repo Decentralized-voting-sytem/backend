@@ -11,7 +11,6 @@ type Voter struct {
     Name      string         `gorm:"not null"`
     DOB       time.Time      `gorm:"not null;type:date"`        
     Password  string         `gorm:"not null"`      
-    Logged    bool           `gorm: not null;default:false` 
     CreatedAt time.Time
     UpdatedAt time.Time
     DeletedAt gorm.DeletedAt `gorm:"index"`
