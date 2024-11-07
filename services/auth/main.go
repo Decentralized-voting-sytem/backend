@@ -19,6 +19,7 @@ func main() {
     r.Use(cors.New(config))
     db.InitDB()
     r.POST("/login", controllers.Login)
-
+    r.POST("/register-vote",controllers.RegisterVote)
+    r.POST("/admin-login",controllers.AdminLogin)
     r.Run()
 }
