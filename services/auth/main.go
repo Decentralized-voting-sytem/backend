@@ -11,15 +11,16 @@ import (
 func main() {
     r := gin.Default()
 
-    config := cors.DefaultConfig()
-    config.AllowOrigins = []string{"http://localhost:3000"}
-    config.AllowHeaders = []string{"Content-Type"}
-    config.AllowCredentials = true
+    r.Use(cors.New(cors.Config{
+        AllowOrigins:     []string{"http://localhost:3000"}, 
+        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+        AllowCredentials: true, 
+    }))
 
-    r.Use(cors.New(config))
     db.InitDB()
     r.POST("/login", controllers.Login)
     r.POST("/register-vote",controllers.RegisterVote)
     r.POST("/admin-login",controllers.AdminLogin)
-    r.Run()
+    r.Run(":8080")
 }
