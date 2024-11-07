@@ -9,17 +9,11 @@ import (
 )
 
 func RegisterVote(c *gin.Context) {
-	voterID, err := c.Cookie("voter_id")
-	if err != nil {
-    	fmt.Println("Error retrieving cookie:", err) // Debugging log
-    	c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Please log in to vote"})
-    	return
-	}
-	fmt.Println("Voter ID from cookie:", voterID)
 
 	var body struct {
-		CandidateID uint `json:"candidate_id"`
+		CandidateID      string         `json:"candidate_id"`
 	}
+
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request data"})
 		return
