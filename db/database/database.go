@@ -22,8 +22,10 @@ func Init() *gorm.DB {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
+	// Auto-migrate models
 	db.AutoMigrate(&models.Vote{}, &models.Voter{}, &models.Candidate{}, &models.Admin{})
 
+	// Create or replace the trigger function
 	triggerFunction := `
 	CREATE OR REPLACE FUNCTION prevent_duplicate_votes()
 	RETURNS TRIGGER AS $$
@@ -39,13 +41,26 @@ func Init() *gorm.DB {
 		log.Printf("Error creating trigger function: %v", err)
 	}
 
+	// Drop the existing trigger if it exists
+	dropTrigger := `
+	DO $$ 
+	BEGIN
+		IF EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'check_duplicate_vote') THEN
+			EXECUTE 'DROP TRIGGER check_duplicate_vote ON votes';
+		END IF;
+	END $$;`
+
+	if err := db.Exec(dropTrigger).Error; err != nil {
+		log.Printf("Error dropping existing trigger: %v", err)
+	}
+
+	// Create the new trigger
 	trigger := `
 	CREATE TRIGGER check_duplicate_vote
 	BEFORE INSERT ON votes
 	FOR EACH ROW
 	EXECUTE FUNCTION prevent_duplicate_votes();`
 
-	// Execute the trigger creation
 	if err := db.Exec(trigger).Error; err != nil {
 		log.Printf("Error creating trigger: %v", err)
 	}

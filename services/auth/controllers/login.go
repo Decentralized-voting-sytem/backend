@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func Login(c *gin.Context) {
 	var body struct {
 		VoterID  string `json:"voter_id"`
@@ -18,6 +17,7 @@ func Login(c *gin.Context) {
 		Password string `json:"password"`
 	}
 
+	// Bind the incoming JSON request body to the body struct
 	if c.Bind(&body) != nil {
 		c.JSON(402, gin.H{
 			"error": "Failed to read the body",
@@ -27,6 +27,7 @@ func Login(c *gin.Context) {
 
 	var voter models.Voter
 
+	// Check credentials against the database
 	query := `SELECT * FROM voters WHERE voter_id = ? AND dob = ? AND password = ?`
 	res := database.DB.Raw(query, body.VoterID, body.DOB, body.Password).First(&voter)
 	if res.Error != nil {
@@ -34,28 +35,22 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	// Check if the name matches
 	if res.RowsAffected == 0 || strings.ToLower(voter.Name) != strings.ToLower(body.Name) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	cookie := http.Cookie{
-        Name:     "exampleCookie",
-        Value:    body.voter_id,
-        Path:     "/",
-        MaxAge:   3600,
-        HttpOnly: true,
-        Secure:   true,
-        SameSite: http.SameSiteLaxMode,
-    }
+	token, err := utils.GenerateVerificationToken(body.VoterID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate verification token"})
+		return
+	}
 
-	err := utils.Write(w, cookie)
-    if err != nil {
-        log.Println(err)
-        http.Error(w, "server error", http.StatusInternalServerError)
-        return
-    }
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("Auth", token, 3600*24*30, "", "", false, false)
 
+	// Return success response
 	c.JSON(200, gin.H{
 		"message": "Login successful",
 	})
