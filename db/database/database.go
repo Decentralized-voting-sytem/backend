@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"sync"
+	"fmt"
 
 	"github.com/Decentralized-voting-sytem/backend/db/models"
 	"gorm.io/driver/postgres"
@@ -16,6 +17,7 @@ func Init() *gorm.DB {
 	DBLock.Lock()
 	defer DBLock.Unlock()
 
+	// Database connection string
 	dsn := "host=localhost user=postgres password=samyak dbname=voting port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -63,6 +65,19 @@ func Init() *gorm.DB {
 
 	if err := db.Exec(trigger).Error; err != nil {
 		log.Printf("Error creating trigger: %v", err)
+	}
+
+	// Define the stored procedure for granting privileges
+	grantPrivilegesProcedure := `
+	CREATE OR REPLACE PROCEDURE grant_privileges_to_user(username TEXT) AS $$
+	BEGIN
+		EXECUTE format('GRANT INSERT, UPDATE, DELETE ON TABLE votes, voters, candidates TO %I;', username);
+	END;
+	$$ LANGUAGE plpgsql;`
+
+	// Create or replace the stored procedure
+	if err := db.Exec(grantPrivilegesProcedure).Error; err != nil {
+		log.Printf("Error creating grant_privileges_to_user procedure: %v", err)
 	}
 
 	// Assign the database instance to the global variable

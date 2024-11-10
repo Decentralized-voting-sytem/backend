@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"github.com/golang-jwt/jwt/v5"
 	"fmt"
 	"net/http"
 	"time"
 	"github.com/Decentralized-voting-sytem/backend/db/database"
 	"github.com/Decentralized-voting-sytem/backend/services/auth/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func RegisterVote(ctx *gin.Context) {
