@@ -59,7 +59,7 @@ func AdminLogin(c *gin.Context) {
 
 	// Set cookie with the generated token
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("AdminAuth", token, 500, "", "", false, false)
+	c.SetCookie("AdminAuth", token, 3600*24, "", "", false, false)
 
 	// Return success response
 	c.JSON(200, gin.H{

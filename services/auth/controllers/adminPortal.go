@@ -116,3 +116,4 @@ func AdminPortal(ctx *gin.Context) {
 		"vote_counts": voteCounts, // Add vote counts to the response
 	})
 }
+

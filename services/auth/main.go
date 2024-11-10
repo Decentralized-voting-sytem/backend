@@ -28,6 +28,7 @@ func main() {
     r.POST("/admin-login", controllers.AdminLogin)
     r.GET("/admin-portal",controllers.AdminPortal)
     r.GET("/admin-insights", controllers.GetVoteInsights)
+    r.POST("/admin-actions", controllers.AdminActions)
 
     // Start the server on port 8080
     err := r.Run(":8080")

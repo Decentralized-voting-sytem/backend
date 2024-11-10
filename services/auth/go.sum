@@ -12,6 +12,8 @@ github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241107164208-50db54490
 github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241107164208-50db5449032b/go.mod h1:nsZLNFAVqk/0CpduKYQDxprtvbO+Yvbymh1iNDxbefM=
 github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241109103834-cb8d19571da0 h1:t0MbEWNBOh9i+nBFgcjrCiKGzOpXZ9s7g+89gGoYHPY=
 github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241109103834-cb8d19571da0/go.mod h1:nsZLNFAVqk/0CpduKYQDxprtvbO+Yvbymh1iNDxbefM=
+github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241110065455-58912a9e046b h1:td3UwSnHJhE2h7/nT64cqeHEeFa/DpdJb9cRKuFwJhM=
+github.com/Decentralized-voting-sytem/backend/db v0.0.0-20241110065455-58912a9e046b/go.mod h1:nsZLNFAVqk/0CpduKYQDxprtvbO+Yvbymh1iNDxbefM=
 github.com/bytedance/sonic v1.11.6 h1:oUp34TzMlL+OY1OUWxHqsdkgC/Zfc85zGqw9siXjrc0=
 github.com/bytedance/sonic v1.11.6/go.mod h1:LysEHSvpvDySVdC2f87zGWf6CIKJcAvqab1ZaiQtds4=
 github.com/bytedance/sonic/loader v0.1.1 h1:c+e5Pt1k/cy5wMveRDyk2X4B9hF4g7an8N3zCYjJFNM=
